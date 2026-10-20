@@ -7,9 +7,11 @@ dist-ssr
 .git
 .gitignore
 
-# Docker and CI files
+# Docker and Compose files
 .dockerignore
-Dockerfile
+Dockerfile*
+docker-compose*.yml
+compose*.yaml
 
 # Local environment and secret files
 .env
@@ -37,6 +39,8 @@ yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 
-# Test scripts and documentation not needed in build
+# Test scripts and documentation not needed in image build
 test-*.js
 README.md
+RUNNING_AND_TESTING.md
+docs/

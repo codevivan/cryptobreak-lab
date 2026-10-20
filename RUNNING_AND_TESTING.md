@@ -66,12 +66,17 @@ This document outlines the commands, procedures, and verified test results for r
 
 ---
 
-## 5. Production Docker Execution *(Alternative)*
+## 5. Docker Execution & Verification
 
-| Operation | Command | Description |
-| :--- | :--- | :--- |
-| **Build Docker Image** | `docker build -t cryptobreak-lab:latest .` | Compiles application using Node.js multi-stage build and bundles into Nginx Alpine image. |
-| **Run Container** | `docker run -d --name cryptobreak-lab -p 8080:80 cryptobreak-lab:latest` | Runs container in detached mode mapping host port `8080` to container port `80`. |
-| **Access Container** | Open `http://localhost:8080/` | Serves production-optimized static assets via Nginx with SPA routing. |
-| **Check Logs** | `docker logs cryptobreak-lab` | Displays Nginx access and startup logs. |
-| **Stop & Remove** | `docker stop cryptobreak-lab && docker rm cryptobreak-lab` | Gracefully stops worker processes and cleans up container. |
+The project is fully prepared for Docker with both Docker Compose and direct Docker CLI workflows.
+
+| Operation | Command | Description | Verified Status |
+| :--- | :--- | :--- | :---: |
+| **Docker Compose (Production)** | `docker compose up -d --build` | Builds multi-stage production image, maps port `8080:80`, verifies healthcheck. | ✓ Verified (Exit 0, Healthy) |
+| **Docker Compose (Development)** | `docker compose -f docker-compose.dev.yml up --build` | Runs Vite dev server inside container with live hot reload and volume sync. | ✓ Configured |
+| **Compose Shutdown** | `docker compose down` | Stops and removes containers and internal bridge network. | ✓ Verified (Exit 0) |
+| **Direct Docker Build** | `docker build -t cryptobreak-lab:latest .` | Multi-stage build (Node.js 22 Alpine -> Nginx Alpine). | ✓ Verified (Exit 0) |
+| **Direct Docker Run** | `docker run -d --name cryptobreak-lab -p 8080:80 cryptobreak-lab:latest` | Runs production container in detached mode. | ✓ Verified (Exit 0) |
+| **Health Check Validation** | `docker inspect --format='{{.State.Health.Status}}' cryptobreak-lab` | Verifies container internal healthcheck (`healthy`). | ✓ Verified (Status: healthy) |
+| **Access Verification** | `http://localhost:8080/` | HTTP GET 200 OK serving optimized SPA bundle. | ✓ Verified (HTTP 200) |
+| **Clean Up** | `npm run docker:clean` | Removes containers, volumes, and networks. | ✓ Verified |
